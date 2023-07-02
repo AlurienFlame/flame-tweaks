@@ -8,7 +8,7 @@ export async function POST({ request }: { request: Request; }) {
 
   // Create a new folder for the package
   let packageFolder = `/home/lucien/dev/flame-tweaks/static/packages/${Date.now()}`;
-  fs.mkdirSync(packageFolder);
+  fse.copySync(`/home/lucien/dev/flame-tweaks/static/packages/template`, packageFolder);
 
   // Copy the modules into the package folder
   for (let module of modules) {
