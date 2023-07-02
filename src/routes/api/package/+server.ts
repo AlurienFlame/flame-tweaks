@@ -14,6 +14,8 @@ export async function POST({ request }: { request: Request; }) {
   for (let module of modules) {
     fse.copySync(`./static/modules/${module}`, `${packageFolder}/${module}`);
   }
+  
+  // TODO: Add a text file listing the modules in the package
 
   // Zip the package folder
   let zipped = zip.sync.zip(packageFolder).compress().memory();
@@ -21,5 +23,6 @@ export async function POST({ request }: { request: Request; }) {
   // Clean up the package folder
   fse.removeSync(packageFolder);
 
+  // TODO: return a name as well
   return new Response(zipped);
 }
