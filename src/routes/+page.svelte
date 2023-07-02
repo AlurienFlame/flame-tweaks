@@ -1,14 +1,7 @@
 <script lang="ts">
-  let modules: string[];
+  import modules from "$lib/modules";
   let selected: Record<string, boolean> = {};
   $: selectedModules = Object.keys(selected).filter((k) => selected[k]);
-
-  import { onMount } from "svelte";
-
-  onMount(async () => {
-    let response = await fetch("/api/modules");
-    modules = await response.json();
-  });
 
   let pkg: Blob | undefined;
   async function createPackage() {
@@ -22,18 +15,26 @@
   <title>Flame Tweaks</title>
 </svelte:head>
 
-<h1>Modules</h1>
-
 <!-- Module Selection -->
-<form>
-  {#each modules || [] as m}
-    <label for={m}>{m}</label>
-    <input type="checkbox" id={m} value={m} bind:checked={selected[m]} />
+<div class="column">
+  {#each modules as group}
+    <h3>{group.name}</h3>
+    {#each group.modules as mod}
+      <label for={mod.id}> {mod.name} </label>
+      <input type="checkbox" id={mod.id} bind:checked={selected[mod.id]} />
+    {/each}
   {/each}
-</form>
+</div>
 
 <!-- Download Package -->
 <button on:click={createPackage}>Create Package</button>
 {#if pkg !== undefined}
   <a href={URL.createObjectURL(pkg)} download="package.zip">Download</a>
 {/if}
+
+<style>
+  .column {
+    display: flex;
+    flex-direction: column;
+  }
+</style>

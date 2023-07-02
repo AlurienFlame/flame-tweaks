@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Distinguishable Crops",
+    "modules": [
+      {
+        "id": "distinguishable_beetroots",
+        "name": "Distinguishable Beetroots",
+        "description": "Hides the red pixels on the second-to-last growth phase of beetroots, making it more evident when they're fully grown."
+      },
+      {
+        "id": "distinguishable_carrots",
+        "name": "Distinguishable Carrots",
+        "description": "Adds flowers to the final growth phase of carrots, making it more evident when they're fully grown."
+      },
+      {
+        "id": "distinguishable_potatoes",
+        "name": "Distinguishable Potatoes",
+        "description": "Makes the second-to-last growth phase of potatoes more discreet and adds flowers to their final growth phase, making it more evident when they're fully grown."
+      },
+      {
+        "id": "distinguishable_wheat",
+        "name": "Distinguishable Wheat",
+        "description": "Makes early growth stategs of wheat greener, making it more evident when they're fully grown."
+      }
+    ]
+  }
+]
