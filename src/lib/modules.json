@@ -23,5 +23,15 @@
         "description": "Makes early growth stategs of wheat greener, making it more evident when they're fully grown."
       }
     ]
+  },
+  {
+    "name": "Misc",
+    "modules": [
+      {
+        "id": "nether_flux",
+        "name": "Nether Flux",
+        "description": "Renames and retextures ancient debris and netherite scrap to nether flux and nether flux ore."
+      }
+    ]
   }
 ]

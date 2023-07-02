@@ -12,6 +12,7 @@ export async function POST({ request }: { request: Request; }) {
 
   // Copy the modules into the package folder
   for (let module of modules) {
+    // TODO: Merge lang files
     fse.copySync(`./static/modules/${module}`, `${packageFolder}`);
   }
 
