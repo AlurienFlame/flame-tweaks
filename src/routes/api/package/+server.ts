@@ -1,29 +1,37 @@
-import fse from 'fs-extra';
-import zip from "zip-local";
+import fs from "fs";
+import JSZip from 'jszip';
 
 class Package {
-  packageFolder = `./static/packages/${Date.now()}`;
+  packageFile: JSZip;
 
   constructor() {
-    // Create a new folder for the package
-    fse.copySync(`./static/packages/template`, this.packageFolder);
+    // Create a new folder for the package, copied from the template
+    this.packageFile = new JSZip();
+    for (let file of fs.readdirSync('./static/packages/template')) {
+      this.packageFile.file(file, fs.readFileSync(`./static/packages/template/${file}`));
+    }
   }
 
   addModule(moduleId: string) {
     // TODO: Merge lang files
     // TODO: Add a text file listing the modules in the package
-    // Copy the modules into the package folder
-    fse.copySync(`./static/modules/${moduleId}`, `${this.packageFolder}`);
+    // Add module folder to package archive
+    this.addFolder(`./static/modules/${moduleId}`, "/");
   }
 
-  export() {
-    // Zip the package folder
-    return zip.sync.zip(this.packageFolder).compress().memory();
+  addFolder(from: string, to: string) {
+    for (let file of fs.readdirSync(from, { withFileTypes: true })) {
+      if (file.isDirectory()) {
+        this.addFolder(`${from}/${file.name}`, `${to}/${file.name}`);
+      } else {
+        this.packageFile.file(`${to}/${file.name}`, fs.readFileSync(`${from}/${file.name}`));
+      }
+    }
   }
 
-  cleanUp() {
-    // Clean up the package folder
-    fse.removeSync(this.packageFolder);
+  async export() {
+    // Get a buffer
+    return this.packageFile.generate({ "type": "nodebuffer"})
   }
 }
 
@@ -36,10 +44,8 @@ export async function POST({ request }: { request: Request; }) {
     pkg.addModule(moduleId);
   }
 
-  let zipBlob = pkg.export();
+  let zipBlob = await pkg.export();
 
-  pkg.cleanUp();
-
-  // TODO: return a filename and other metadata as well
+  // // TODO: return a filename and other metadata as well
   return new Response(zipBlob);
 }
