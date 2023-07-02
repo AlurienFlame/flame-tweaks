@@ -12,9 +12,9 @@ export async function POST({ request }: { request: Request; }) {
 
   // Copy the modules into the package folder
   for (let module of modules) {
-    fse.copySync(`./static/modules/${module}`, `${packageFolder}/${module}`);
+    fse.copySync(`./static/modules/${module}`, `${packageFolder}`);
   }
-  
+
   // TODO: Add a text file listing the modules in the package
 
   // Zip the package folder
