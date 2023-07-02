@@ -1,29 +1,45 @@
-import fs from 'fs';
 import fse from 'fs-extra';
 import zip from "zip-local";
+
+class Package {
+  packageFolder = `./static/packages/${Date.now()}`;
+
+  constructor() {
+    // Create a new folder for the package
+    fse.copySync(`./static/packages/template`, this.packageFolder);
+  }
+
+  addModule(moduleId: string) {
+    // TODO: Merge lang files
+    // TODO: Add a text file listing the modules in the package
+    // Copy the modules into the package folder
+    fse.copySync(`./static/modules/${moduleId}`, `${this.packageFolder}`);
+  }
+
+  export() {
+    // Zip the package folder
+    return zip.sync.zip(this.packageFolder).compress().memory();
+  }
+
+  cleanUp() {
+    // Clean up the package folder
+    fse.removeSync(this.packageFolder);
+  }
+}
 
 export async function POST({ request }: { request: Request; }) {
   // Recieves a list of module names and compiles a package with them
   let modules = await request.json();
+  let pkg = new Package();
 
-  // Create a new folder for the package
-  let packageFolder = `./static/packages/${Date.now()}`;
-  fse.copySync(`./static/packages/template`, packageFolder);
-
-  // Copy the modules into the package folder
-  for (let module of modules) {
-    // TODO: Merge lang files
-    fse.copySync(`./static/modules/${module}`, `${packageFolder}`);
+  for (let moduleId of modules) {
+    pkg.addModule(moduleId);
   }
 
-  // TODO: Add a text file listing the modules in the package
+  let zipBlob = pkg.export();
 
-  // Zip the package folder
-  let zipped = zip.sync.zip(packageFolder).compress().memory();
+  pkg.cleanUp();
 
-  // Clean up the package folder
-  fse.removeSync(packageFolder);
-
-  // TODO: return a name as well
-  return new Response(zipped);
+  // TODO: return a filename and other metadata as well
+  return new Response(zipBlob);
 }
