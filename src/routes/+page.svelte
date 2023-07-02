@@ -10,9 +10,10 @@
     modules = await response.json();
   });
 
-  let pkg: Blob;
+  let pkg: Blob | undefined;
   async function createPackage() {
-    let response = await fetch("/api/package", { method: "POST", body: JSON.stringify(modules) });
+    pkg = undefined;
+    let response = await fetch("/api/package", { method: "POST", body: JSON.stringify(selectedModules) });
     pkg = await response.blob();
   }
 </script>
