@@ -30,6 +30,36 @@
     ]
   },
   {
+    "name": "Blinking",
+    "modules": [
+      {
+        "id": "blinking_dispensers",
+        "name": "Blinking Dispensers",
+        "description": "Makes dispensers blink from time to time"
+      },
+      {
+        "id": "blinking_droppers",
+        "name": "Blinking Droppers",
+        "description": "Makes droppers blink from time to time"
+      },
+      {
+        "id": "blinking_observers",
+        "name": "Blinking Observers",
+        "description": "Makes observers blink from time to time"
+      },
+      {
+        "id": "blinking_eyes_of_ender",
+        "name": "Blinking Eyes of Ender",
+        "description": "Makes eyes of ender blink from time to time"
+      },
+      {
+        "id": "blinking_totems_of_undying",
+        "name": "Blinking Totems of Undying",
+        "description": "Makes totems of undying blink from time to time"
+      }
+    ]
+  },
+  {
     "name": "Misc",
     "modules": [
       {
