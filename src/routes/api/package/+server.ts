@@ -4,6 +4,7 @@ import JSZip from 'jszip';
 class Package {
   packageFile: JSZip;
   selectedModules: string[] = [];
+  mergedLangFile: { [key: string]: string; } = {};
 
   constructor() {
     // Create a new folder for the package, copied from the template
@@ -14,9 +15,20 @@ class Package {
   }
 
   addModule(moduleId: string) {
-    // TODO: Merge lang files
+    // Aggregate lang file data
+    if (fs.existsSync(`./static/modules/${moduleId}/assets/minecraft/lang`)) {
+      for (let langFilename of fs.readdirSync(`./static/modules/${moduleId}/assets/minecraft/lang`)) {
+        let langFile = fs.readFileSync(`./static/modules/${moduleId}/assets/minecraft/lang/${langFilename}`);
+        let langFileObj: { [key: string]: string; } = JSON.parse(langFile.toString());
+        if (Object.keys(this.mergedLangFile).some(key => Object.keys(langFileObj).includes(key))) {
+          console.warn(`Lang key overwrite from ${moduleId}:${langFilename}`);
+        }
+        Object.assign(this.mergedLangFile, langFileObj);
+      }
+    }
+
     // Add module folder to package archive
-    this.addFolder(`./static/modules/${moduleId}`, "/");
+    this.addFolder(`./static/modules/${moduleId}`, "");
     this.selectedModules.push(moduleId);
   }
 
@@ -32,10 +44,10 @@ class Package {
 
   async export() {
     // Add module list file
-    let selectedPacksTemplate = "Flame Tweaks Resource Pack\nVersion: 1.20\nPacks:\n\t"
+    let selectedPacksTemplate = "Flame Tweaks Resource Pack\nVersion: 1.20\nPacks:\n\t";
     this.packageFile.file("Selected Packs.txt", selectedPacksTemplate + this.selectedModules.join("\n\t"));
     // Return a buffer object
-    return this.packageFile.generateAsync({ "type": "nodebuffer"})
+    return this.packageFile.generateAsync({ "type": "nodebuffer" });
   }
 }
 
@@ -50,14 +62,13 @@ function prettyPrintBytes(bytes: number) {
 }
 
 export async function POST({ request }: { request: Request; }) {
-  console.log(request)
   // Recieves a list of module names and compiles a package with them
   let modules = await request.json();
-  
+
   if (!modules.length) {
-    return new Response("No modules selected", { status: 400 })
+    return new Response("No modules selected", { status: 400 });
   }
-  
+
   let pkg = new Package();
 
   for (let moduleId of modules) {
@@ -67,6 +78,6 @@ export async function POST({ request }: { request: Request; }) {
   let zipBlob = await pkg.export();
 
   // TODO: return a filename and other metadata as well
-  console.log(`Package created: ${prettyPrintBytes(zipBlob.byteLength)}`)
+  console.log(`Package created: ${prettyPrintBytes(zipBlob.byteLength)}`);
   return new Response(zipBlob);
 }

@@ -29,7 +29,7 @@
 <!-- Download Package -->
 <button on:click={createPackage}>Create Package</button>
 {#if pkg !== undefined}
-  <a href={URL.createObjectURL(pkg)} download="package.zip">Download</a>
+  <a href={URL.createObjectURL(pkg)} download="FlameTweaks.zip">Download</a>
 {/if}
 
 <style>
