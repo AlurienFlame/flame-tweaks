@@ -5,7 +5,7 @@
       {
         "id": "distinguishable_beetroots",
         "name": "Distinguishable Beetroots",
-        "description": "Hides the red pixels on the second-to-last growth phase of beetroots, making it more evident when they're fully grown."
+        "description": "Makes partially grown beetroots more discreet, making it more evident when they're fully grown."
       },
       {
         "id": "distinguishable_carrots",
@@ -15,12 +15,17 @@
       {
         "id": "distinguishable_potatoes",
         "name": "Distinguishable Potatoes",
-        "description": "Makes the second-to-last growth phase of potatoes more discreet and adds flowers to their final growth phase, making it more evident when they're fully grown."
+        "description": "Makes partially grown potatoes more discreet and adds flowers to their final growth phase, making it more evident when they're fully grown."
       },
       {
         "id": "distinguishable_wheat",
         "name": "Distinguishable Wheat",
-        "description": "Makes early growth stages of wheat greener, making it more evident when they're fully grown."
+        "description": "Makes partially grown wheat greener, making it more evident when it's fully grown."
+      },
+      {
+        "id": "distinguishable_nether_wart",
+        "name": "Distinguishable Nether Wart",
+        "description": "Desaturates partially grown nether wart, making it more evident when it's fully grown."
       }
     ]
   },
@@ -36,6 +41,21 @@
         "id": "pride_apple",
         "name": "Pride Apple",
         "description": "Renames and retextures the enchanted golden apple to celebrate trans pride."
+      },
+      {
+        "id": "lush_glow_lichen",
+        "name": "Lush Glow Lichen",
+        "description": "Retextures glow lichen to the lush caves palette to make it more distinct from diamond ore."
+      },
+      {
+        "id": "colorful_ender_pearls",
+        "name": "Colorful Ender Pearls",
+        "description": "Makes ender pearls slowly cycle through the color spectrum."
+      },
+      {
+        "id": "alurien_flame",
+        "name": "Alurien Flame",
+        "description": "Renames soul flame (torches, flames, lanterns, campfires) to Alurien flame, after the resource pack creator."
       }
     ]
   }
