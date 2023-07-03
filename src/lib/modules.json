@@ -31,6 +31,11 @@
         "id": "nether_flux",
         "name": "Nether Flux",
         "description": "Renames and retextures ancient debris and netherite scrap to nether flux and nether flux ore."
+      },
+      {
+        "id": "pride_apple",
+        "name": "Pride Apple",
+        "description": "Renames and retextures the enchanted golden apple to celebrate trans pride."
       }
     ]
   }
