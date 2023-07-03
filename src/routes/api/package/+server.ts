@@ -39,9 +39,25 @@ class Package {
   }
 }
 
+function prettyPrintBytes(bytes: number) {
+  let units = ["B", "KB", "MB", "GB", "TB"];
+  let i = 0;
+  while (bytes > 1024) {
+    bytes /= 1024;
+    i++;
+  }
+  return `${bytes.toFixed(2)} ${units[i]}`;
+}
+
 export async function POST({ request }: { request: Request; }) {
+  console.log(request)
   // Recieves a list of module names and compiles a package with them
   let modules = await request.json();
+  
+  if (!modules.length) {
+    return new Response("No modules selected", { status: 400 })
+  }
+  
   let pkg = new Package();
 
   for (let moduleId of modules) {
@@ -50,6 +66,7 @@ export async function POST({ request }: { request: Request; }) {
 
   let zipBlob = await pkg.export();
 
-  // // TODO: return a filename and other metadata as well
+  // TODO: return a filename and other metadata as well
+  console.log(`Package created: ${prettyPrintBytes(zipBlob.byteLength)}`)
   return new Response(zipBlob);
 }
