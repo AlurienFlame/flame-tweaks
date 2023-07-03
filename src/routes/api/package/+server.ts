@@ -43,6 +43,8 @@ class Package {
   }
 
   async export() {
+    // Set lang file
+    this.packageFile.file("assets/minecraft/lang/en_us.json", JSON.stringify(this.mergedLangFile, null, 2));
     // Add module list file
     let selectedPacksTemplate = "Flame Tweaks Resource Pack\nVersion: 1.20\nPacks:\n\t";
     this.packageFile.file("Selected Packs.txt", selectedPacksTemplate + this.selectedModules.join("\n\t"));
