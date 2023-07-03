@@ -71,6 +71,7 @@ export async function POST({ request }: { request: Request; }) {
 
   let pkg = new Package();
 
+  modules = Array.from(new Set(modules)); // Remove duplicates
   for (let moduleId of modules) {
     pkg.addModule(moduleId);
   }
