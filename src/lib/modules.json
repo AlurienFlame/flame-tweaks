@@ -86,6 +86,11 @@
         "id": "alurien_flame",
         "name": "Alurien Flame",
         "description": "Renames soul flame (torches, flames, lanterns, campfires) to Alurien flame, after the resource pack creator."
+      },
+      {
+        "id": "replace_end_music_jumpscare",
+        "name": "Replace End Music Jumpscare",
+        "description": "Replaced end.ogg, the end music track with the obnoxious machine gun-like sound, with C418 - Ki, an unused track from the Minecraft soundtrack."
       }
     ]
   }
