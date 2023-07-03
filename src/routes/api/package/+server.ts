@@ -3,6 +3,7 @@ import JSZip from 'jszip';
 
 class Package {
   packageFile: JSZip;
+  selectedModules: string[] = [];
 
   constructor() {
     // Create a new folder for the package, copied from the template
@@ -14,9 +15,9 @@ class Package {
 
   addModule(moduleId: string) {
     // TODO: Merge lang files
-    // TODO: Add a text file listing the modules in the package
     // Add module folder to package archive
     this.addFolder(`./static/modules/${moduleId}`, "/");
+    this.selectedModules.push(moduleId);
   }
 
   addFolder(from: string, to: string) {
@@ -30,8 +31,11 @@ class Package {
   }
 
   async export() {
-    // Get a buffer
-    return this.packageFile.generate({ "type": "nodebuffer"})
+    // Add module list file
+    let selectedPacksTemplate = "Flame Tweaks Resource Pack\nVersion: 1.20\nPacks:\n\t"
+    this.packageFile.file("Selected Packs.txt", selectedPacksTemplate + this.selectedModules.join("\n\t"));
+    // Return a buffer object
+    return this.packageFile.generateAsync({ "type": "nodebuffer"})
   }
 }
 
