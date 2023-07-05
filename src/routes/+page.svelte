@@ -22,10 +22,13 @@
     description: ""
   };
 
+  let downloading = false;
   let pkg: Blob | undefined;
   async function createPackage() {
     pkg = undefined;
+    downloading = true;
     let response = await fetch("/api/package", { method: "POST", body: JSON.stringify(selectedModules.map((m) => m.id)) });
+    downloading = false;
     pkg = await response.blob();
 
     // Download
@@ -87,7 +90,7 @@
         </div>
       {/each}
     </div>
-    <button class="download-button" on:click={createPackage} disabled={!selectedModules.length}>Download</button>
+    <button class="download-button" on:click={createPackage} disabled={!selectedModules.length || downloading}>Download{downloading ? "ing..." : ""}</button>
     <b>{focusedModule?.name}</b>
     {#if focusedModule.hasIcon}
       <!-- TODO: Examples -->
