@@ -5,17 +5,20 @@
       {
         "id": "distinguishable_beetroots",
         "name": "Distinguishable Beetroots",
-        "description": "Makes partially grown beetroots more discreet, making it more evident when they're fully grown."
+        "description": "Makes partially grown beetroots more discreet, making it more evident when they're fully grown.",
+        "hasIcon": true
       },
       {
         "id": "distinguishable_carrots",
         "name": "Distinguishable Carrots",
-        "description": "Adds flowers to the final growth phase of carrots, making it more evident when they're fully grown."
+        "description": "Adds flowers to the final growth phase of carrots, making it more evident when they're fully grown.",
+        "hasIcon": true
       },
       {
         "id": "distinguishable_potatoes",
         "name": "Distinguishable Potatoes",
-        "description": "Makes partially grown potatoes more discreet and adds flowers to their final growth phase, making it more evident when they're fully grown."
+        "description": "Makes partially grown potatoes more discreet and adds flowers to their final growth phase, making it more evident when they're fully grown.",
+        "hasIcon": true
       },
       {
         "id": "distinguishable_wheat",
@@ -35,7 +38,8 @@
       {
         "id": "blinking_dispensers",
         "name": "Blinking Dispensers",
-        "description": "Makes dispensers blink from time to time"
+        "description": "Makes dispensers blink from time to time",
+        "hasIcon": true
       },
       {
         "id": "blinking_droppers",
@@ -65,17 +69,20 @@
       {
         "id": "nether_flux",
         "name": "Nether Flux",
-        "description": "Renames and retextures ancient debris and netherite scrap to nether flux and nether flux ore."
+        "description": "Renames and retextures ancient debris and netherite scrap to nether flux and nether flux ore.",
+        "hasIcon": true
       },
       {
         "id": "pride_apple",
         "name": "Pride Apple",
-        "description": "Renames and retextures the enchanted golden apple to celebrate trans pride."
+        "description": "Renames and retextures the enchanted golden apple to celebrate trans pride.",
+        "hasIcon": true
       },
       {
         "id": "lush_glow_lichen",
         "name": "Lush Glow Lichen",
-        "description": "Retextures glow lichen to the lush caves palette to make it more distinct from diamond ore."
+        "description": "Retextures glow lichen to the lush caves palette to make it more distinct from diamond ore.",
+        "hasIcon": true
       },
       {
         "id": "colorful_ender_pearls",

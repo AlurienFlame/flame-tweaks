@@ -3,6 +3,7 @@
     "id": string;
     "name": string;
     "description": string;
+    "hasIcon"?: boolean;
   }
   interface Group {
     "name": string;
@@ -35,6 +36,7 @@
   }
 </script>
 
+<!-- TODO: Font -->
 <svelte:head>
   <title>Flame Tweaks</title>
 </svelte:head>
@@ -58,6 +60,9 @@
               focusedModule = mod;
             }}
           >
+            {#if mod.hasIcon}
+              <img src="/modules/{mod.id}/pack.png" alt="{mod.name} Icon" />
+            {/if}
             {mod.name}
           </label>
         {/each}
@@ -75,8 +80,12 @@
         </div>
       {/each}
     </div>
-    <button on:click={createPackage}>Download</button>
+    <button class="download-button" on:click={createPackage}>Download</button>
     <b>{focusedModule?.name}</b>
+    {#if focusedModule.hasIcon}
+      <!-- TODO: Examples -->
+      <img src="/modules/{focusedModule.id}/pack.png" alt="{focusedModule.name} Icon" />
+    {/if}
     <p>{focusedModule?.description}</p>
   </div>
 </div>
@@ -120,10 +129,22 @@
     background-color: #ddd;
     cursor: pointer;
     transition: filter 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    gap: 0.5rem;
+    user-select: none;
   }
 
   .module:hover {
     filter: brightness(0.9);
+  }
+
+  .module > img {
+    image-rendering: crisp-edges;
+    width: 4rem;
+    height: 4rem;
   }
 
   .download-panel {
@@ -131,7 +152,30 @@
     flex-direction: column;
     gap: 1rem;
   }
+
+  .download-panel > img {
+    image-rendering: crisp-edges;
+    width: 8rem;
+    height: 8rem;
+  }
   
+  .download-button {
+    border: none;
+    background-color: #ccc;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    
+  }
+  
+  .download-button:hover {
+    filter: brightness(0.9);
+  }
+  
+  .download-button:active {
+    filter: brightness(0.8);
+    
+  }
+
   .selected-modules {
     display: flex;
     flex-direction: column;
