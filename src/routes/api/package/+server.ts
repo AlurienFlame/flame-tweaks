@@ -44,7 +44,9 @@ class Package {
 
   async export() {
     // Set lang file
-    this.packageFile.file("assets/minecraft/lang/en_us.json", JSON.stringify(this.mergedLangFile, null, 2));
+    if (Object.keys(this.mergedLangFile).length) {
+      this.packageFile.file("assets/minecraft/lang/en_us.json", JSON.stringify(this.mergedLangFile, null, 2));
+    }
     // Add module list file
     let selectedPacksTemplate = "Flame Tweaks Resource Pack\nVersion: 1.20\nPacks:\n\t";
     this.packageFile.file("Selected Packs.txt", selectedPacksTemplate + this.selectedModules.join("\n\t"));
@@ -82,5 +84,8 @@ export async function POST({ request }: { request: Request; }) {
 
   // TODO: return a filename and other metadata as well
   console.log(`Package created: ${prettyPrintBytes(zipBlob.byteLength)}`);
-  return new Response(zipBlob);
+
+  let response = new Response(zipBlob);
+  response.headers.set("Content-Type", "application/zip");
+  return response;
 }
