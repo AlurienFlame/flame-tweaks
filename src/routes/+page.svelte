@@ -41,8 +41,13 @@
   <title>Flame Tweaks</title>
 </svelte:head>
 
-<!-- Module Selection -->
 <div class="container">
+  <header>
+    <img src="/favicon.png" alt="Flame Tweaks Logo" />
+    <h1>Flame Tweaks</h1>
+  </header>
+
+  <!-- Module Selection -->
   <div class="modules-panel">
     {#each groups as group}
       <h3>{group.name}</h3>
@@ -92,6 +97,22 @@
 </div>
 
 <style>
+  header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+  header > img {
+    image-rendering: crisp-edges;
+    width: 4rem;
+    height: 4rem;
+  }
+  header > img:hover {
+    transform: rotate(360deg);
+    transition: transform 1s ease-out;
+  }
   .container {
     display: grid;
     grid-template-columns: 5fr 1fr;
