@@ -61,6 +61,7 @@
             }}
           >
             {#if mod.hasIcon}
+              <!-- TODO: Animated icons for some modules -->
               <img src="/modules/{mod.id}/pack.png" alt="{mod.name} Icon" />
             {/if}
             {mod.name}

@@ -23,12 +23,14 @@
       {
         "id": "distinguishable_wheat",
         "name": "Distinguishable Wheat",
-        "description": "Makes partially grown wheat greener, making it more evident when it's fully grown."
+        "description": "Makes partially grown wheat greener, making it more evident when it's fully grown.",
+        "hasIcon": true
       },
       {
         "id": "distinguishable_nether_wart",
         "name": "Distinguishable Nether Wart",
-        "description": "Desaturates partially grown nether wart, making it more evident when it's fully grown."
+        "description": "Desaturates partially grown nether wart, making it more evident when it's fully grown.",
+        "hasIcon": true
       }
     ]
   },
@@ -44,22 +46,26 @@
       {
         "id": "blinking_droppers",
         "name": "Blinking Droppers",
-        "description": "Makes droppers blink from time to time"
+        "description": "Makes droppers blink from time to time",
+        "hasIcon": true
       },
       {
         "id": "blinking_observers",
         "name": "Blinking Observers",
-        "description": "Makes observers blink from time to time"
+        "description": "Makes observers blink from time to time",
+        "hasIcon": true
       },
       {
         "id": "blinking_eyes_of_ender",
         "name": "Blinking Eyes of Ender",
-        "description": "Makes eyes of ender blink from time to time"
+        "description": "Makes eyes of ender blink from time to time",
+        "hasIcon": true
       },
       {
         "id": "blinking_totems_of_undying",
         "name": "Blinking Totems of Undying",
-        "description": "Makes totems of undying blink from time to time"
+        "description": "Makes totems of undying blink from time to time",
+        "hasIcon": true
       }
     ]
   },
@@ -87,12 +93,14 @@
       {
         "id": "colorful_ender_pearls",
         "name": "Colorful Ender Pearls",
-        "description": "Makes ender pearls slowly cycle through the color spectrum."
+        "description": "Makes ender pearls slowly cycle through the color spectrum.",
+        "hasIcon": true
       },
       {
         "id": "alurien_flame",
         "name": "Alurien Flame",
-        "description": "Renames soul flame (torches, flames, lanterns, campfires) to Alurien flame, after the resource pack creator."
+        "description": "Renames soul flame (torches, flames, lanterns, campfires) to Alurien flame, after the resource pack creator.",
+        "hasIcon": true
       },
       {
         "id": "replace_end_music_jumpscare",
