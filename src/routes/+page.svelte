@@ -1,3 +1,4 @@
+<!-- FIXME: Resource pack only works when unzipped -->
 <script lang="ts">
   interface Module {
     "id": string;

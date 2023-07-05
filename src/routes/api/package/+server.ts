@@ -33,10 +33,14 @@ class Package {
   }
 
   addFolder(from: string, to: string) {
+    let fileBlacklist = ["pack.png"];
+    let folderBlacklist = ["/assets/minecraft/lang"];
+    if (folderBlacklist.includes(to)) return;
     for (let file of fs.readdirSync(from, { withFileTypes: true })) {
       if (file.isDirectory()) {
         this.addFolder(`${from}/${file.name}`, `${to}/${file.name}`);
       } else {
+        if (fileBlacklist.includes(file.name)) continue;
         this.packageFile.file(`${to}/${file.name}`, fs.readFileSync(`${from}/${file.name}`));
       }
     }
