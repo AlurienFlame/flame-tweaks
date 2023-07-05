@@ -80,7 +80,7 @@
         </div>
       {/each}
     </div>
-    <button class="download-button" on:click={createPackage}>Download</button>
+    <button class="download-button" on:click={createPackage} disabled={!selectedModules.length}>Download</button>
     <b>{focusedModule?.name}</b>
     {#if focusedModule.hasIcon}
       <!-- TODO: Examples -->
@@ -158,22 +158,23 @@
     width: 8rem;
     height: 8rem;
   }
-  
+
   .download-button {
     border: none;
-    background-color: #ccc;
+    background-color: #ddd;
+    color: black;
+    font-weight: bold;
     border-radius: 0.5rem;
     padding: 0.5rem 1rem;
-    
   }
-  
+
   .download-button:hover {
     filter: brightness(0.9);
   }
-  
+
   .download-button:active {
     filter: brightness(0.8);
-    
+    transform: translateY(0.1rem);
   }
 
   .selected-modules {
