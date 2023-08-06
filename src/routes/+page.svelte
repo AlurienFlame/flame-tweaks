@@ -101,7 +101,7 @@
     <b>{focusedModule?.name}</b>
     {#if focusedModule.hasIcon}
       <!-- TODO: Examples -->
-      <img src="/modules/{focusedModule.id}/pack.png" alt="{focusedModule.name} Icon" />
+      <img src="/modules/{focusedModule.id}/{focusedModule.name}/pack.png" alt="{focusedModule.name} Icon" />
     {/if}
     <p>{focusedModule?.description}</p>
   </div>

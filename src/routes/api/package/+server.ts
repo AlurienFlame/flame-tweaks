@@ -15,10 +15,13 @@ class Package {
   }
 
   addModule(moduleId: string) {
+    // Find module name
+    let moduleName = fs.readdirSync(`./static/modules/${moduleId}`).find(file => fs.statSync(`./static/modules/${moduleId}/${file}`).isDirectory());
+    
     // Aggregate lang file data
-    if (fs.existsSync(`./static/modules/${moduleId}/assets/minecraft/lang`)) {
-      for (let langFilename of fs.readdirSync(`./static/modules/${moduleId}/assets/minecraft/lang`)) {
-        let langFile = fs.readFileSync(`./static/modules/${moduleId}/assets/minecraft/lang/${langFilename}`);
+    if (fs.existsSync(`./static/modules/${moduleId}/${moduleName}/assets/minecraft/lang`)) {
+      for (let langFilename of fs.readdirSync(`./static/modules/${moduleId}/${moduleName}/assets/minecraft/lang`)) {
+        let langFile = fs.readFileSync(`./static/modules/${moduleId}/${moduleName}/assets/minecraft/lang/${langFilename}`);
         let langFileObj: { [key: string]: string; } = JSON.parse(langFile.toString());
         if (Object.keys(this.mergedLangFile).some(key => Object.keys(langFileObj).includes(key))) {
           console.warn(`Lang key overwrite from ${moduleId}:${langFilename}`);
@@ -28,12 +31,12 @@ class Package {
     }
 
     // Add module folder to package archive
-    this.addFolder(`./static/modules/${moduleId}`, "");
+    this.addFolder(`./static/modules/${moduleId}/${moduleName}`, "");
     this.selectedModules.push(moduleId);
   }
 
   addFolder(from: string, to: string) {
-    let fileBlacklist = ["pack.png"];
+    let fileBlacklist = ["pack.png", "pack.mcmeta"];
     let folderBlacklist = ["/assets/minecraft/lang"];
     if (folderBlacklist.includes(to)) return;
     for (let file of fs.readdirSync(from, { withFileTypes: true })) {
