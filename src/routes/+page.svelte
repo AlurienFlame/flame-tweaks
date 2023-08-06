@@ -1,4 +1,5 @@
 <!-- FIXME: Resource pack only works when unzipped -->
+<!-- Fix is to delete any redundant files from pack -->
 <script lang="ts">
   interface Module {
     "id": string;
@@ -10,18 +11,23 @@
     "name": string;
     "modules": Module[];
   }
+
   import groups from "$lib/modules";
+
+  // List currently selected modules
   let checkboxValues: { [key: string]: boolean } = {};
   let modules: Module[] = groups.flatMap((g: Group) => g.modules);
   let selectedModules: Module[] = [];
   $: selectedModules = modules.filter((m) => checkboxValues[m.id]);
 
+  // And metadata about the module currently being hovered
   let focusedModule: Module = {
     id: "",
     name: "",
     description: ""
   };
 
+  // Build and download the package from selected modules
   let downloading = false;
   let pkg: Blob | undefined;
   async function createPackage() {
