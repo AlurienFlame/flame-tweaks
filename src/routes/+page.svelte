@@ -5,27 +5,34 @@
     "id": string;
     "name": string;
     "description": string;
-    "hasIcon"?: boolean;
-    "group"?: string;
-  }
-  interface Group {
-    "name": string;
-    "modules": Module[];
+    "hasIcon": boolean;
+    "group": string;
   }
 
-  import groups from "$lib/modules";
+  export let data;
+  let modules: Module[] = data.modules;
+
+  // Build groups
+  let groups: { [name: string]: Module[] } = {};
+  for (let module of modules) {
+    if (!Object.keys(groups).includes(module.group)) {
+      groups[module.group] = [];
+    }
+    groups[module.group].push(module);
+  }
 
   // List currently selected modules
   let checkboxValues: { [key: string]: boolean } = {};
-  let modules: Module[] = groups.flatMap((g: Group) => g.modules);
   let selectedModules: Module[] = [];
-  $: selectedModules = modules.filter((m) => checkboxValues[m.id]);
+  $: selectedModules = modules.filter((m: Module) => checkboxValues[m.id]);
 
   // And metadata about the module currently being hovered
   let focusedModule: Module = {
     id: "",
     name: "",
-    description: ""
+    description: "",
+    hasIcon: false,
+    group: ""
   };
 
   // Build and download the package from selected modules
@@ -60,10 +67,10 @@
 
   <!-- Module Selection -->
   <div class="modules-panel">
-    {#each groups as group}
-      <h3>{group.name}</h3>
+    {#each Object.entries(groups).sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0)) as [groupName, modules]}
+      <h3>{groupName}</h3>
       <div class="group">
-        {#each group.modules as mod}
+        {#each modules as mod}
           <input class="module-checkbox" type="checkbox" id={mod.id} bind:checked={checkboxValues[mod.id]} />
           <label
             class="module"

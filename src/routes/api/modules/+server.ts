@@ -1,9 +1,5 @@
 import fs from "fs";
 
-function snakeToTitleCase(str: string) {
-  return str.replace(/_/g, " ").replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-}
-
 export async function GET() {
   interface Module {
     "id": string;
@@ -27,7 +23,7 @@ export async function GET() {
         moduleMetadata.group = extraMetadata.group;
       } else {
         // If it's not metadata.json, it must be the pack folder
-        moduleMetadata.name = snakeToTitleCase(moduleDirName);
+        moduleMetadata.name = moduleContent;
         let packMetadata = JSON.parse(fs.readFileSync(`./static/modules/${moduleDirName}/${moduleContent}/pack.mcmeta`, { encoding: "ascii" }));
         moduleMetadata.description = packMetadata.pack.description;
         moduleMetadata.hasIcon = fs.existsSync(`./static/modules/${moduleDirName}/${moduleContent}/pack.png`);
