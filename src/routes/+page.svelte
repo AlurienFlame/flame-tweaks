@@ -6,6 +6,7 @@
     "name": string;
     "description": string;
     "hasIcon"?: boolean;
+    "group"?: string;
   }
   interface Group {
     "name": string;
@@ -77,7 +78,7 @@
           >
             {#if mod.hasIcon}
               <!-- TODO: Animated icons for some modules -->
-              <img src="/modules/{mod.id}/pack.png" alt="{mod.name} Icon" />
+              <img src="/modules/{mod.id}/{mod.name}/pack.png" alt="{mod.name} Icon" />
             {/if}
             {mod.name}
           </label>
