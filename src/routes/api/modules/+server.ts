@@ -1,6 +1,7 @@
 import fs from "fs";
 
 export async function GET() {
+  // TODO: Unified types library or just remove typescript already
   interface Module {
     "id": string;
     "name"?: string;

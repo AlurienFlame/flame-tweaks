@@ -10,14 +10,17 @@ class Package {
     // Create a new folder for the package, copied from the template
     this.packageFile = new JSZip();
     for (let file of fs.readdirSync('./static/packages/template')) {
-      this.packageFile.file(file, fs.readFileSync(`./static/packages/template/${file}`));
+      this.packageFile.file(file,
+        fs.readFileSync(`./static/packages/template/${file}`),
+        { compression: file.endsWith(".mcmeta") ? "DEFLATE" : "STORE" }
+      );
     }
   }
 
   addModule(moduleId: string) {
     // Find module name
     let moduleName = fs.readdirSync(`./static/modules/${moduleId}`).find(file => fs.statSync(`./static/modules/${moduleId}/${file}`).isDirectory());
-    
+
     // Aggregate lang file data
     if (fs.existsSync(`./static/modules/${moduleId}/${moduleName}/assets/minecraft/lang`)) {
       for (let langFilename of fs.readdirSync(`./static/modules/${moduleId}/${moduleName}/assets/minecraft/lang`)) {
@@ -44,7 +47,11 @@ class Package {
         this.addFolder(`${from}/${file.name}`, `${to}/${file.name}`);
       } else {
         if (fileBlacklist.includes(file.name)) continue;
-        this.packageFile.file(`${to}/${file.name}`, fs.readFileSync(`${from}/${file.name}`));
+        this.packageFile.file(
+          `${to}/${file.name}`,
+          fs.readFileSync(`${from}/${file.name}`),
+          { "compression": (file.name.endsWith(".json") || file.name.endsWith(".mcmeta")) ? "DEFLATE" : "STORE" }
+        );
       }
     }
   }
@@ -52,11 +59,19 @@ class Package {
   async export() {
     // Set lang file
     if (Object.keys(this.mergedLangFile).length) {
-      this.packageFile.file("assets/minecraft/lang/en_us.json", JSON.stringify(this.mergedLangFile, null, 2));
+      this.packageFile.file(
+        "assets/minecraft/lang/en_us.json",
+        JSON.stringify(this.mergedLangFile, null, 2),
+        { compression: "DEFLATE" }
+      );
     }
     // Add module list file
     let selectedPacksTemplate = "Flame Tweaks Resource Pack\nVersion: 1.20\nPacks:\n\t";
-    this.packageFile.file("Selected Packs.txt", selectedPacksTemplate + this.selectedModules.join("\n\t"));
+    this.packageFile.file(
+      "Selected Packs.txt",
+      selectedPacksTemplate + this.selectedModules.join("\n\t"),
+      { compression: "DEFLATE" }
+    );
     // Return a buffer object
     return this.packageFile.generateAsync({ "type": "nodebuffer" });
   }

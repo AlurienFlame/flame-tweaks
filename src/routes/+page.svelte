@@ -1,5 +1,5 @@
 <!-- FIXME: Resource pack only works when unzipped -->
-<!-- Fix is to delete any redundant files from pack -->
+<!-- Works when decompressed and recompressed by Ark, so it's a problem with how we're compressing. -->
 <script lang="ts">
   interface Module {
     "id": string;
