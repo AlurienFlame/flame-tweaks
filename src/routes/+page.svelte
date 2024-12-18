@@ -1,4 +1,4 @@
-<!-- FIXME: Resource pack only works when unzipped -->
+<!-- FIXME: Resource pack only works when unzipped | it looks like it's a problem with image encoding settings, because the lang file works fine -->
 <!-- Works when decompressed and recompressed by Ark, so it's a problem with how we're compressing. -->
 <script lang="ts">
   interface Module {
@@ -52,6 +52,14 @@
     link.setAttribute("download", "FlameTweaks.zip");
     link.click();
   }
+
+
+  function toggleAllPicked(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement; }) {
+    let allPicked = selectedModules.length === modules.length;
+    for (let module of modules) {
+      checkboxValues[module.id] = !allPicked;
+    }
+  }
 </script>
 
 <!-- TODO: Font -->
@@ -96,6 +104,7 @@
 
   <!-- Download Package -->
   <div class="download-panel">
+    <button class="download-button" on:click={toggleAllPicked}>Pick All</button>
     <b>Selected</b>
     <div class="selected-modules">
       {#each selectedModules as mod}
