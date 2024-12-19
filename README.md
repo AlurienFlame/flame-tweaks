@@ -1,38 +1,32 @@
-# create-svelte
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+# Flame Tweaks
+This is the source code for a website that allows you to construct and download a modular resource pack for Minecraft, providing an assortment of minor tweaks.
 
-## Creating a project
+I generally only support one version of the game at once, and it's not always the latest version. I don't take requests, though I'm open to suggestions.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Features
+- [x] Distinguishable growth stages: wheat, carrots, potatoes, nether wart, beetroot
+- [x] Blinking: dispensers, droppers, observers, ender eyes, totems of undying
+- [x] Ender pearls slowly cycle through the colors of the rainbow
+- [x] Soul fire (torches, flames, lanterns, campfires) is renamed Alurien Flame
+- [x] Ancient Debris and Nether Scrap is retextured and renamed to Nether Flux.
+- [x] end.ogg (The obnoxious machinegun sounding end track) is replaced with with C418 - Ki
+- [x] Notch apple retextured with trans pride flag and renamed to "Pride Apple"
+- [x] Glow lichen is colored like cave vine (to avoid confusion with diamond ore)
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+## Wishlist
+- [ ] Compass break texture
+- [ ] Digital clock
+- [ ] Custom paintings
+- [ ] Animated ores
+- [ ] Animated nether scrap
+- [ ] Blinking chiseled deepslate
+- [ ] Grass variants with flowers
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Once you've cloned the repository, install dependencies with `npm install`.
 
-```bash
-npm run dev
+You can start a development server with `npm run dev`.
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+This repository is configured with continuous deployment, so building is handled automatically.
