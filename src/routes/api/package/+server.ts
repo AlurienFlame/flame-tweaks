@@ -49,16 +49,17 @@ class Package {
 
   addFolder(from: string, to: string) {
     let fileBlacklist = ["pack.png", "pack.mcmeta"];
-    let folderBlacklist = ["/assets/minecraft/lang"];
+    let folderBlacklist = ["assets/minecraft/lang"];
     if (folderBlacklist.includes(to)) return;
     for (let file of fs.readdirSync(from, { withFileTypes: true })) {
+      const toPath = to ? `${to}/${file.name}` : file.name;
       if (file.isDirectory()) {
-        this.addFolder(`${from}/${file.name}`, `${to}/${file.name}`);
+        this.addFolder(`${from}/${file.name}`, toPath);
       } else {
         if (fileBlacklist.includes(file.name)) continue;
         // Add file to package
         this.packageFile.file(
-          `${to}/${file.name}`,
+          toPath,
           fs.readFileSync(`${from}/${file.name}`, {encoding: "base64"}),
           {
             compression: compressionFor(file.name),
