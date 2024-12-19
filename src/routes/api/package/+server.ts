@@ -1,6 +1,10 @@
 import fs from "fs";
 import JSZip from 'jszip';
 
+function compressionFor(filename: string) {
+  return filename.endsWith(".json") || filename.endsWith(".mcmeta") || filename.endsWith(".ogg") || filename == "ender_pearl.png" ? "DEFLATE" : "STORE";
+}
+
 class Package {
   packageFile: JSZip;
   selectedModules: string[] = [];
@@ -10,9 +14,14 @@ class Package {
     // Create a new folder for the package, copied from the template
     this.packageFile = new JSZip();
     for (let file of fs.readdirSync('./static/packages/template')) {
+      // Add file to package
       this.packageFile.file(file,
-        fs.readFileSync(`./static/packages/template/${file}`),
-        { compression: file.endsWith(".mcmeta") ? "DEFLATE" : "STORE" }
+        fs.readFileSync(`./static/packages/template/${file}`, {encoding: "base64"}),
+        {
+          compression: compressionFor(file),
+          base64: true,
+          unixPermissions: 0o664,
+        }
       );
     }
   }
@@ -47,10 +56,15 @@ class Package {
         this.addFolder(`${from}/${file.name}`, `${to}/${file.name}`);
       } else {
         if (fileBlacklist.includes(file.name)) continue;
+        // Add file to package
         this.packageFile.file(
           `${to}/${file.name}`,
-          fs.readFileSync(`${from}/${file.name}`),
-          { "compression": (file.name.endsWith(".json") || file.name.endsWith(".mcmeta")) ? "DEFLATE" : "STORE" }
+          fs.readFileSync(`${from}/${file.name}`, {encoding: "base64"}),
+          {
+            compression: compressionFor(file.name),
+            base64: true,
+            unixPermissions: 0o664,
+          }
         );
       }
     }
@@ -66,14 +80,14 @@ class Package {
       );
     }
     // Add module list file
-    let selectedPacksTemplate = "Flame Tweaks Resource Pack\nVersion: 1.20\nPacks:\n\t";
+    let selectedPacksTemplate = "Flame Tweaks Resource Pack\nVersion: 1.21.4\nPacks:\n\t";
     this.packageFile.file(
       "Selected Packs.txt",
       selectedPacksTemplate + this.selectedModules.join("\n\t"),
       { compression: "DEFLATE" }
     );
     // Return a buffer object
-    return this.packageFile.generateAsync({ "type": "nodebuffer" });
+    return this.packageFile.generateAsync({ platform: "UNIX", type: "nodebuffer" });
   }
 }
 
