@@ -1,5 +1,3 @@
-<!-- FIXME: Resource pack only works when unzipped | it looks like it's a problem with image encoding settings, because the lang file works fine -->
-<!-- Works when decompressed and recompressed by Ark, so it's a problem with how we're compressing. -->
 <script lang="ts">
   interface Module {
     "id": string;
@@ -64,6 +62,14 @@
 <!-- TODO: Font -->
 <svelte:head>
   <title>Flame Tweaks</title>
+  <meta name="description" content="Assorted texture tweaks by AlurienFlame." />
+  <meta property="og:title" content="Flame Tweaks" />
+  <meta property="og:site_name" content="Flame Tweaks." />
+  <meta property="og:type" content="website" />
+  <meta property="og:description" content="Assorted texture tweaks by AlurienFlame." />
+  <meta property="og:url" content="https://flame-tweaks.netlify.app/" />
+  <meta property="og:image" content="https://flame-tweaks.netlify.app/favicon.png" />
+  <meta name="twitter:image:alt" content="The Minecraft observer texture, edited to look like it's raising an eyebrow" />
 </svelte:head>
 
 <div class="container">
