@@ -53,8 +53,7 @@
     link.click();
   }
 
-
-  function toggleAllPicked(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement; }) {
+  function toggleAllPicked(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }) {
     let allPicked = selectedModules.length === modules.length;
     for (let module of modules) {
       checkboxValues[module.id] = !allPicked;
@@ -71,10 +70,13 @@
   <header>
     <img src="/favicon.png" alt="Flame Tweaks Logo" />
     <h1>Flame Tweaks</h1>
+    <a href="https://github.com/AlurienFlame/flame-tweaks" target="_blank" rel="noopener noreferrer"> Source </a>
+    <a href="https://github.com/AlurienFlame/flame-tweaks/issues" target="_blank" rel="noopener noreferrer"> Report an Issue </a>
   </header>
 
   <!-- Module Selection -->
   <div class="modules-panel">
+    <button class="button w-fit" on:click={toggleAllPicked}>{selectedModules.length === modules.length ? "Unpick" : "Pick"} All</button>
     {#each Object.entries(groups).sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0)) as [groupName, modules]}
       <h3>{groupName}</h3>
       <div class="group">
@@ -102,28 +104,41 @@
     {/each}
   </div>
 
-  <!-- Download Package -->
+  <!-- Sidebar -->
   <div class="download-panel">
-    <button class="download-button" on:click={toggleAllPicked}>Pick All</button>
-    <b>Selected</b>
-    <div class="selected-modules">
-      {#each selectedModules as mod}
-        <div>
-          {mod.name}
-        </div>
-      {/each}
-    </div>
-    <button class="download-button" on:click={createPackage} disabled={!selectedModules.length || downloading}>Download{downloading ? "ing..." : ""}</button>
-    <b>{focusedModule?.name}</b>
-    {#if focusedModule.hasIcon}
-      <!-- TODO: Examples -->
-      <img src="/modules/{focusedModule.id}/{focusedModule.name}/pack.png" alt="{focusedModule.name} Icon" />
+    {#if selectedModules.length}
+      <!-- List of Selected Modules -->
+      <b>Selected</b>
+      <div class="selected-modules">
+        {#each selectedModules as mod}
+          <div>
+            {mod.name}
+          </div>
+        {/each}
+      </div>
+      <button class="button" on:click={createPackage} disabled={!selectedModules.length || downloading}>Download{downloading ? "ing..." : ""}</button>
     {/if}
-    <p>{focusedModule?.description}</p>
+    {#if focusedModule}
+      <!-- Focused Module Info and Preview -->
+      <b>{focusedModule.name}</b>
+      {#if focusedModule.hasIcon}
+        <!-- TODO: Examples -->
+        <img src="/modules/{focusedModule.id}/{focusedModule.name}/pack.png" alt="{focusedModule.name} Icon" />
+      {/if}
+      <p>{focusedModule.description}</p>
+    {/if}
   </div>
 </div>
 
 <style>
+  :global(body) {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  img {
+    image-rendering: crisp-edges;
+  }
   header {
     display: flex;
     align-items: center;
@@ -132,7 +147,6 @@
     grid-column-end: 3;
   }
   header > img {
-    image-rendering: crisp-edges;
     width: 4rem;
     height: 4rem;
   }
@@ -191,7 +205,6 @@
   }
 
   .module > img {
-    image-rendering: crisp-edges;
     width: 4rem;
     height: 4rem;
   }
@@ -203,12 +216,11 @@
   }
 
   .download-panel > img {
-    image-rendering: crisp-edges;
     width: 8rem;
     height: 8rem;
   }
 
-  .download-button {
+  .button {
     border: none;
     background-color: #ddd;
     color: black;
@@ -216,12 +228,15 @@
     border-radius: 0.5rem;
     padding: 0.5rem 1rem;
   }
+  .w-fit {
+    width: fit-content;
+  }
 
-  .download-button:hover {
+  .button:hover {
     filter: brightness(0.9);
   }
 
-  .download-button:active {
+  .button:active {
     filter: brightness(0.8);
     transform: translateY(0.1rem);
   }
