@@ -1,5 +1,6 @@
 import fs from "fs";
 import JSZip from 'jszip';
+import { packFormatFor, packMetadata } from '$lib/pack-versions';
 
 function compressionFor(filename: string) {
   return filename.endsWith(".json") || filename.endsWith(".mcmeta") || filename.endsWith(".ogg") || filename == "ender_pearl.png" ? "DEFLATE" : "STORE";
@@ -10,10 +11,11 @@ class Package {
   selectedModules: string[] = [];
   mergedLangFile: { [key: string]: string; } = {};
 
-  constructor() {
+  constructor(public minecraftVersion: string, public packFormat: string) {
     // Create a new folder for the package, copied from the template
     this.packageFile = new JSZip();
     for (let file of fs.readdirSync('./static/packages/template')) {
+      if (file === 'pack.mcmeta') continue;
       // Add file to package
       this.packageFile.file(file,
         fs.readFileSync(`./static/packages/template/${file}`, {encoding: "base64"}),
@@ -27,13 +29,13 @@ class Package {
   }
 
   addModule(moduleId: string) {
-    // Find module name
-    let moduleName = fs.readdirSync(`./static/modules/${moduleId}`).find(file => fs.statSync(`./static/modules/${moduleId}/${file}`).isDirectory());
+    const moduleRoot = `./static/modules/${moduleId}/versions/${this.packFormat}`;
+    let moduleName = fs.readdirSync(moduleRoot).find(file => fs.statSync(`${moduleRoot}/${file}`).isDirectory());
 
     // Aggregate lang file data
-    if (fs.existsSync(`./static/modules/${moduleId}/${moduleName}/assets/minecraft/lang`)) {
-      for (let langFilename of fs.readdirSync(`./static/modules/${moduleId}/${moduleName}/assets/minecraft/lang`)) {
-        let langFile = fs.readFileSync(`./static/modules/${moduleId}/${moduleName}/assets/minecraft/lang/${langFilename}`);
+    if (fs.existsSync(`${moduleRoot}/${moduleName}/assets/minecraft/lang`)) {
+      for (let langFilename of fs.readdirSync(`${moduleRoot}/${moduleName}/assets/minecraft/lang`)) {
+        let langFile = fs.readFileSync(`${moduleRoot}/${moduleName}/assets/minecraft/lang/${langFilename}`);
         let langFileObj: { [key: string]: string; } = JSON.parse(langFile.toString());
         if (Object.keys(this.mergedLangFile).some(key => Object.keys(langFileObj).includes(key))) {
           console.warn(`Lang key overwrite from ${moduleId}:${langFilename}`);
@@ -43,7 +45,7 @@ class Package {
     }
 
     // Add module folder to package archive
-    this.addFolder(`./static/modules/${moduleId}/${moduleName}`, "");
+    this.addFolder(`${moduleRoot}/${moduleName}`, "");
     this.selectedModules.push(moduleId);
   }
 
@@ -72,6 +74,8 @@ class Package {
   }
 
   async export() {
+    const template = JSON.parse(fs.readFileSync('./static/packages/template/pack.mcmeta', 'utf8'));
+    this.packageFile.file("pack.mcmeta", JSON.stringify(packMetadata(this.packFormat, template.pack.description), null, 2));
     // Set lang file
     if (Object.keys(this.mergedLangFile).length) {
       this.packageFile.file(
@@ -81,7 +85,7 @@ class Package {
       );
     }
     // Add module list file
-    let selectedPacksTemplate = "Flame Tweaks Resource Pack\nVersion: 1.21.4\nPacks:\n\t";
+    let selectedPacksTemplate = `Flame Tweaks Resource Pack\nVersion: ${this.minecraftVersion}\nPack format: ${this.packFormat}\nPacks:\n\t`;
     this.packageFile.file(
       "Selected Packs.txt",
       selectedPacksTemplate + this.selectedModules.join("\n\t"),
@@ -103,16 +107,26 @@ function prettyPrintBytes(bytes: number) {
 }
 
 export async function POST({ request }: { request: Request; }) {
-  // Recieves a list of module names and compiles a package with them
-  let modules = await request.json();
-
-  if (!modules.length) {
-    return new Response("No modules selected", { status: 400 });
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return new Response("Invalid JSON", { status: 400 });
   }
+  if (!body || !Array.isArray(body.modules) || !body.modules.length ||
+      !body.modules.every((id: unknown) => typeof id === "string")) {
+    return new Response("Select at least one valid module", { status: 400 });
+  }
+  const format = packFormatFor(body.minecraftVersion);
+  if (!format) return new Response("Unsupported Minecraft version", { status: 400 });
 
-  let pkg = new Package();
-
-  modules = Array.from(new Set(modules)); // Remove duplicates
+  const availableModules = fs.readdirSync('./static/modules', { withFileTypes: true })
+    .filter(entry => entry.isDirectory()).map(entry => entry.name);
+  const modules = Array.from(new Set<string>(body.modules));
+  if (modules.some(id => !availableModules.includes(id))) {
+    return new Response("Unknown module", { status: 400 });
+  }
+  let pkg = new Package(body.minecraftVersion, format);
   for (let moduleId of modules) {
     pkg.addModule(moduleId);
   }
@@ -124,5 +138,6 @@ export async function POST({ request }: { request: Request; }) {
 
   let response = new Response(zipBlob);
   response.headers.set("Content-Type", "application/zip");
+  response.headers.set("Content-Disposition", 'attachment; filename="FlameTweaks.zip"');
   return response;
 }

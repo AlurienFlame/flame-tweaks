@@ -1,0 +1,7 @@
+{
+  "pack": {
+    "min_format": [97, 1],
+    "max_format": [97, 1],
+    "description": "Retextures glow lichen to the lush caves palette to make it more distinct from diamond ore."
+  }
+}

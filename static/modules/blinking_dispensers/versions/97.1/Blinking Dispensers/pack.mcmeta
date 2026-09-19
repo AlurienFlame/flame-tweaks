@@ -2,6 +2,6 @@
   "pack": {
     "min_format": [97, 1],
     "max_format": [97, 1],
-    "description": "Assorted texture tweaks by AlurienFlame."
+    "description": "Makes dispensers blink from time to time."
   }
 }

@@ -1,0 +1,7 @@
+{
+  "pack": {
+    "min_format": [97, 1],
+    "max_format": [97, 1],
+    "description": "Makes partially grown wheat greener, making it more evident when it's fully grown."
+  }
+}

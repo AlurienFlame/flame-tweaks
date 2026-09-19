@@ -1,9 +1,25 @@
 <script lang="ts">
+  import { defaultMinecraftVersion, packVersions } from '$lib/pack-versions';
+
+  let minecraftVersion = defaultMinecraftVersion;
+  let showSnapshots = false;
+  $: visibleVersions = packVersions.flatMap(pack =>
+    showSnapshots ? [...pack.versions, ...pack.snapshots] : pack.versions);
+
+  function toggleSnapshots(event: Event) {
+    showSnapshots = (event.currentTarget as HTMLInputElement).checked;
+    if (!showSnapshots) {
+      const pack = packVersions.find(pack => pack.snapshots.includes(minecraftVersion));
+      if (pack) minecraftVersion = pack.versions[0];
+    }
+  }
+
   interface Module {
     "id": string;
     "name": string;
     "description": string;
     "hasIcon": boolean;
+    "iconUrl": string;
     "group": string;
   }
 
@@ -30,25 +46,34 @@
     name: "",
     description: "",
     hasIcon: false,
+    iconUrl: "",
     group: ""
   };
 
   // Build and download the package from selected modules
   let downloading = false;
-  let pkg: Blob | undefined;
+  let downloadError = "";
   async function createPackage() {
-    pkg = undefined;
+    downloadError = "";
     downloading = true;
-    let response = await fetch("/api/package", { method: "POST", body: JSON.stringify(selectedModules.map((m) => m.id)) });
-    downloading = false;
-    pkg = await response.blob();
-
-    // Download
-    let url = URL.createObjectURL(pkg);
-    let link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "FlameTweaks.zip");
-    link.click();
+    try {
+      const response = await fetch("/api/package", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ modules: selectedModules.map(m => m.id), minecraftVersion })
+      });
+      if (!response.ok) throw new Error(await response.text());
+      const url = URL.createObjectURL(await response.blob());
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "FlameTweaks.zip";
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (error) {
+      downloadError = error instanceof Error ? error.message : "Download failed";
+    } finally {
+      downloading = false;
+    }
   }
 
   function toggleAllPicked(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }) {
@@ -101,7 +126,7 @@
           >
             {#if mod.hasIcon}
               <!-- TODO: Animated icons for some modules -->
-              <img src="/modules/{mod.id}/{mod.name}/pack.png" alt="{mod.name} Icon" />
+              <img src={mod.iconUrl} alt="{mod.name} Icon" />
             {/if}
             {mod.name}
           </label>
@@ -112,6 +137,19 @@
 
   <!-- Sidebar -->
   <div class="download-panel">
+    <label for="minecraft-version">Minecraft version</label>
+    <select id="minecraft-version" bind:value={minecraftVersion} disabled={downloading}>
+      {#each visibleVersions as version}
+        <option value={version}>{version}</option>
+      {/each}
+    </select>
+    <label title="Include compatible snapshots, pre-releases, and release candidates">
+      <input type="checkbox" checked={showSnapshots} on:change={toggleSnapshots} disabled={downloading} />
+      Show snapshots
+    </label>
+    {#if downloadError}
+      <p role="alert">{downloadError}</p>
+    {/if}
     {#if selectedModules.length}
       <!-- List of Selected Modules -->
       <b>Selected</b>
@@ -129,7 +167,7 @@
       <b>{focusedModule.name}</b>
       {#if focusedModule.hasIcon}
         <!-- TODO: Examples -->
-        <img src="/modules/{focusedModule.id}/{focusedModule.name}/pack.png" alt="{focusedModule.name} Icon" />
+        <img src={focusedModule.iconUrl} alt="{focusedModule.name} Icon" />
       {/if}
       <p>{focusedModule.description}</p>
     {/if}

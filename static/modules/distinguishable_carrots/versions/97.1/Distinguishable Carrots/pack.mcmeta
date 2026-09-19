@@ -1,0 +1,7 @@
+{
+  "pack": {
+    "min_format": [97, 1],
+    "max_format": [97, 1],
+    "description": "Adds flowers to the final growth phase of carrots, making it more evident when they're fully grown."
+  }
+}

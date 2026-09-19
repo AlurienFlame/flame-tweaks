@@ -1,4 +1,5 @@
 import fs from "fs";
+import { defaultMinecraftVersion, packFormatFor } from '$lib/pack-versions';
 
 export async function GET() {
   // TODO: Unified types library or just remove typescript already
@@ -7,6 +8,7 @@ export async function GET() {
     "name"?: string;
     "description"?: string;
     "hasIcon"?: boolean;
+    "iconUrl"?: string;
     "group"?: string;
   }
 
@@ -18,18 +20,18 @@ export async function GET() {
     let moduleMetadata: Module = {
       id: moduleDirName,
     };
-    for (let moduleContent of fs.readdirSync(`./static/modules/${moduleDirName}`)) {
-      if (moduleContent === "metadata.json") {
-        let extraMetadata = JSON.parse(fs.readFileSync(`./static/modules/${moduleDirName}/metadata.json`, { encoding: "ascii" }));
-        moduleMetadata.group = extraMetadata.group;
-      } else {
-        // If it's not metadata.json, it must be the pack folder
-        moduleMetadata.name = moduleContent;
-        let packMetadata = JSON.parse(fs.readFileSync(`./static/modules/${moduleDirName}/${moduleContent}/pack.mcmeta`, { encoding: "ascii" }));
-        moduleMetadata.description = packMetadata.pack.description;
-        moduleMetadata.hasIcon = fs.existsSync(`./static/modules/${moduleDirName}/${moduleContent}/pack.png`);
-      }
-    }
+    const moduleRoot = `./static/modules/${moduleDirName}`;
+    const versionPath = `/modules/${moduleDirName}/versions/${packFormatFor(defaultMinecraftVersion)}`;
+    const packName = fs.readdirSync(`./static${versionPath}`)
+      .find(file => fs.statSync(`./static${versionPath}/${file}`).isDirectory());
+    const packPath = `${versionPath}/${packName}`;
+    const extraMetadata = JSON.parse(fs.readFileSync(`${moduleRoot}/metadata.json`, { encoding: "ascii" }));
+    const packMetadata = JSON.parse(fs.readFileSync(`./static${packPath}/pack.mcmeta`, { encoding: "ascii" }));
+    moduleMetadata.group = extraMetadata.group;
+    moduleMetadata.name = packName;
+    moduleMetadata.description = packMetadata.pack.description;
+    moduleMetadata.hasIcon = fs.existsSync(`./static${packPath}/pack.png`);
+    moduleMetadata.iconUrl = `${packPath}/pack.png`;
     moduleMetadataList.push(moduleMetadata);
   }
 
