@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { defaultMinecraftVersion, packVersions } from '$lib/pack-versions';
+  import { defaultMinecraftVersion, packFilenameFor, packVersions } from '$lib/pack-versions';
 
   let minecraftVersion = defaultMinecraftVersion;
   let showSnapshots = false;
@@ -66,7 +66,7 @@
       const url = URL.createObjectURL(await response.blob());
       const link = document.createElement("a");
       link.href = url;
-      link.download = "FlameTweaks.zip";
+      link.download = packFilenameFor(minecraftVersion);
       link.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (error) {

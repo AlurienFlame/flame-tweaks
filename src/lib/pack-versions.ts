@@ -26,3 +26,11 @@ export function packMetadata(format: string, description: string) {
     ? { pack: { pack_format: major, description } }
     : { pack: { min_format: [major, minor], max_format: [major, minor], description } };
 }
+
+export function packFilenameFor(version: string): string {
+  const pack = packVersions.find(pack => pack.versions.includes(version) || pack.snapshots.includes(version));
+  if (!pack) throw new Error("Unsupported Minecraft version");
+  const versions = [...pack.versions].sort((a, b) => a.localeCompare(b, "en", { numeric: true }));
+  const range = versions.length === 1 ? versions[0] : `${versions[0]}-${versions[versions.length - 1]}`;
+  return `FlameTweaks_MC${range}.zip`;
+}

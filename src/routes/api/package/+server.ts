@@ -1,6 +1,6 @@
 import fs from "fs";
 import JSZip from 'jszip';
-import { packFormatFor, packMetadata } from '$lib/pack-versions';
+import { packFilenameFor, packFormatFor, packMetadata } from '$lib/pack-versions';
 
 function compressionFor(filename: string) {
   return filename.endsWith(".json") || filename.endsWith(".mcmeta") || filename.endsWith(".ogg") || filename == "ender_pearl.png" ? "DEFLATE" : "STORE";
@@ -138,6 +138,6 @@ export async function POST({ request }: { request: Request; }) {
 
   let response = new Response(zipBlob);
   response.headers.set("Content-Type", "application/zip");
-  response.headers.set("Content-Disposition", 'attachment; filename="FlameTweaks.zip"');
+  response.headers.set("Content-Disposition", `attachment; filename="${packFilenameFor(body.minecraftVersion)}"`);
   return response;
 }
